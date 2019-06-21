@@ -1,4 +1,4 @@
-package com.cys;
+package com.cys.jdk8;
 
 import com.cys.pojo.User;
 import org.junit.Test;
