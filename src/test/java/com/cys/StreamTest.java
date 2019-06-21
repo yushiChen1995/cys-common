@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 /**
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 public class StreamTest {
     private static List<String> strList = Arrays.asList("DDD2", "ADD1", "CCC", "BBB3", "BBB2", "AAA2", "zAA1");
     private static List<Integer> numList = Arrays.asList(1, 0, 2, -1, -10, 6, 0, -25, 90);
+
 
     /**
      * stream -> 过滤
@@ -148,5 +150,53 @@ public class StreamTest {
                 filter(x -> x.compareTo("Z") > 0).
                 reduce("", String::concat);
         System.out.println("concat = " + concat);
+    }
+
+    /**
+     * 串行Stream上的操作是在一个线程中依次完成，而并行Stream则是在多个线程上同时执行。
+     * 测试串行流的执行时间
+     */
+    @Test
+    public void testSequential() {
+        //创建没有重复元素的大表
+        int max = 1000000;
+        List<String> values = new ArrayList<>(max);
+        for (int i = 0; i < max; i++) {
+            UUID uuid = UUID.randomUUID();
+            values.add(uuid.toString());
+        }
+        //串行排序
+        long t0 = System.nanoTime();
+        long count = values.stream().sorted().count();
+        System.out.println(count);
+
+        long t1 = System.nanoTime();
+
+        long millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
+        System.out.println(String.format("串行排序所用的时间: %d ms", millis));//串行排序所用的时间: 705 ms
+    }
+
+    /**
+     * 测试并行流的执行时间
+     */
+    @Test
+    public void testParallel() {
+        //创建没有重复元素的大表
+        int max = 1000000;
+        List<String> values = new ArrayList<>(max);
+        for (int i = 0; i < max; i++) {
+            UUID uuid = UUID.randomUUID();
+            values.add(uuid.toString());
+        }
+        //并行排序
+        long t0 = System.nanoTime();
+
+        long count = values.parallelStream().sorted().count();
+        System.out.println(count);
+
+        long t1 = System.nanoTime();
+
+        long millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
+        System.out.println(String.format("并行排序所用的时间: %d ms", millis));//并行排序所用的时间: 363 ms
     }
 }
