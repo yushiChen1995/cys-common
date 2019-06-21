@@ -1,13 +1,17 @@
 package com.cys;
 
+import com.cys.pojo.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author cys
@@ -47,8 +51,31 @@ public class StreamTest {
      */
     @Test
     public void testCustomizeSorted() {
-
+        List<User> list = new ArrayList<>();
+        User user  = new User("候张三", "123", 14);
+        User user2 = new User("谌王五", "789", 15);
+        User user3 = new User("王麻子", "456", 19);
+        User user1 = new User("谌李四", "456", 16);
+        list.add(user);
+        list.add(user1);
+        list.add(user2);
+        list.add(user3);
+        list.stream().sorted(Comparator.comparing(User::getUserName, (u1, u2) -> {
+            //姓谌排姓候前面
+            if (u1.startsWith("谌") && !u2.startsWith("谌")) {
+                //负整数 -> u1 < u2  u1往前排  u1代表姓谌的
+                return -1;
+            } else if (!u1.startsWith("谌") && u2.startsWith("谌")) {
+                //正整数 -> u1 > u2  u2往前排  u2代表姓谌的
+                return 1;
+            } else {
+                //都是姓谌的往下走
+                return 0;
+            }
+            //相等按年龄倒序排
+        }).thenComparing(User::getAge, Comparator.naturalOrder())).forEach(System.out::println);
     }
+
 
     /**
      * 返回由此流的元素组成的流，根据自然顺序排序。
