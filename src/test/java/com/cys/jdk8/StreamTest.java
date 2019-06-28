@@ -3,8 +3,6 @@ package com.cys.jdk8;
 import com.cys.pojo.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -14,8 +12,7 @@ import java.util.stream.Stream;
  * @author cys
  * @date 2019/6/21
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 public class StreamTest {
     private static List<String> strList = Arrays.asList("DDD2", "ADD1", "CCC", "BBB3", "BBB2", "AAA2", "zAA1");
     private static List<Integer> numList = Arrays.asList(1, 0, 2, -1, -10, 6, 0, -25, 90);

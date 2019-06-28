@@ -1,22 +1,17 @@
 package com.cys.jdk8;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
  * @author cys
  * @date 2019/6/21
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 public class DateTest {
 
     /**
