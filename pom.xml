@@ -17,6 +17,9 @@
     <url>https://github.com/yushiChen1995/cys-common.git</url>
     <packaging>jar</packaging>
 
+    <properties>
+        <xxl_job_vsersion>2.0.1</xxl_job_vsersion>
+    </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -55,6 +58,17 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+        <!-- xxl-job-core -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>${xxl-job_version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

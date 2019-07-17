@@ -1,6 +1,7 @@
 package com.cys.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,7 +178,21 @@ public class Utilities
 		default:
 			return "volume:desc";
 		}
-	} 
+	}
+
+	public static String encodeMD5(String content){
+		return encodePassword(content + getRandomPwd(40), "md5");
+	}
+
+	/**
+	 * 产生数字和字母混合的指定位数的随机密码
+	 * @param count 位数
+	 * @return 随机密码
+	 */
+	public static String getRandomPwd(int count)
+	{
+		return RandomStringUtils.random(count, true, true);
+	}
     
     /**
      * 排序字段的获取
