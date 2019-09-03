@@ -70,6 +70,9 @@
             <version>${xxl-job_version}</version>
             <scope>provided</scope>
         </dependency>
+
+
+
     </dependencies>
 
     <build>

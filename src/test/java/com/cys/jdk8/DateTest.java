@@ -1,11 +1,20 @@
 package com.cys.jdk8;
 
+import io.swagger.models.auth.In;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.cys.cys.IntentionLevel.roleMap;
 
 /**
  * @author cys
@@ -55,11 +64,142 @@ public class DateTest {
         LocalDateTime dateTime = LocalDateTime.parse(strDate, fomatter1);
         System.out.println("dateTime = " + dateTime);//2019-06-21T16:21:10
 
-        LocalDateTime rightNow= LocalDateTime.now();
-        String date= DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(rightNow);
+        LocalDateTime rightNow = LocalDateTime.now();
+        String date = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(rightNow);
         System.out.println(date);//2019-06-21T16:40:17.355
-        DateTimeFormatter formatter= DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss");
         System.out.println(formatter.format(rightNow));//2019-06-21 16:40:17
 
     }
+
+    /**
+     * 每天执行
+     */
+    @Test
+    public void executedDaily() {
+        //得到当天的结束时间
+        Long endOfTheDay = TimeHelper.getEndOfTheDayBySpecifyTime(1551369600000L);
+        //得到当天的开始时间
+        Date startDate = new Date(1551369600000L);
+        Date endDate = new Date(endOfTheDay);
+        Long thatDayTime = System.currentTimeMillis();
+        int count = 0;
+        while (thatDayTime >= endDate.getTime()) {
+            System.out.println(endDate.getTime());
+            System.out.println(startDate.getTime());
+            count++;
+            startDate = DateUtils.addDays(startDate, 1);
+
+            endDate = DateUtils.addDays(endDate, 1);
+
+        }
+        System.out.println("count = " + count);
+    }
+
+    /**
+     * 获取某个日期距离当前日多少天
+     */
+    @Test
+    public void timeConversion() throws ParseException {
+        //将字符串转为日期
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dstr = "2019-01-19 00:00:00 ";
+        java.util.Date date = sdf.parse(dstr);
+        long s1 = date.getTime();//将时间转为毫秒
+        long s2 = System.currentTimeMillis();//得到当前的毫秒
+        int day = (int) ((s2 - s1) / 1000 / 60 / 60 / 24);
+        System.out.println("距现在已有" + day + "天，你得抓紧时间学习了");
+
+    }
+
+    /**
+     * test占位符
+     */
+    @Test
+    public void testPlaceholder() {
+        String s = "https://m.lechebang.cn/molun/{0}/payment/scan/index";
+        String format = MessageFormat.format(s, "58");
+        System.out.println("format = " + format);
+
+        String s1 = "https://m.lechebang.cn/molun/%s/payment/scan/index";
+        String format1 = String.format(s1, 58);
+        System.out.println("format1 = " + format1);
+    }
+
+    @Test
+    public void testGetMaxRole() {
+        System.out.println("ROLE:" + roleMap);
+        List<String> roles = new ArrayList<>();
+        roles.add("班主任");
+        roles.add("教务处");
+        roles.add("系主任");
+        roles.add("我最大");
+        roles.add("院领导");
+        roles.add("老大");
+
+
+        Map<String, Byte> sortMap = sort(roleMap);
+        System.out.println("sort = " + sortMap);
+        Set<String> keySet = sortMap.keySet();
+        System.out.println("keySet = " + keySet);
+
+        String maxRole = getMaxRole(roles, roleMap);
+        System.out.println("maxRole = " + maxRole);
+
+    }
+
+    /**
+     * 将所有的角色从大到小排序
+     *
+     * @param map
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    private static <K, V extends Comparable<? super V>> Map<K, V> sort(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort((o1, o2) -> {
+            int compare = (o1.getValue()).compareTo(o2.getValue());
+            return -compare;
+        });
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
+    /**
+     * 获取最大的角色
+     *
+     * @param roles
+     * @param map
+     * @return
+     */
+    private static String getMaxRole(List<String> roles, Map<String, Byte> map) {
+        Map<String, Byte> sortMap = sort(map);
+        System.out.println("sort = " + sortMap);
+        Set<String> keySet = sortMap.keySet();
+        System.out.println("keySet = " + keySet);
+        for (String roleKey : keySet) {
+            for (String role : roles) {
+                if (roleKey.equals(role)) {
+                    return role;
+                }
+
+            }
+
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+
+    }
+
 }
+
+
+
+

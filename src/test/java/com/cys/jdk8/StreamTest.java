@@ -1,8 +1,11 @@
 package com.cys.jdk8;
 
 import com.cys.pojo.User;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import redis.clients.jedis.BinaryClient;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -120,11 +123,11 @@ public class StreamTest {
     }
 
     /**
-     *  这是一个 最终操作 ，允许通过指定的函数来讲stream中的多个元素规约为一个元素，规约后的结果是通过Optional 接口表示的：
-     *  这个方法的主要作用是把 Stream 元素组合起来。它提供一个起始值（种子），然后依照运算规则（BinaryOperator），
-     *  和前面 Stream 的第一个、第二个、第 n 个元素组合。从这个意义上说，字符串拼接、数值的 sum、min、max、average 都是特殊的 reduce。
-     *  例如 Stream 的 sum 就相当于Integer sum = integers.reduce(0, (a, b) -> a+b);也有没有起始值的情况，
-     *  这时会把 Stream 的前面两个元素组合起来，返回的是 Optional。
+     * 这是一个 最终操作 ，允许通过指定的函数来讲stream中的多个元素规约为一个元素，规约后的结果是通过Optional 接口表示的：
+     * 这个方法的主要作用是把 Stream 元素组合起来。它提供一个起始值（种子），然后依照运算规则（BinaryOperator），
+     * 和前面 Stream 的第一个、第二个、第 n 个元素组合。从这个意义上说，字符串拼接、数值的 sum、min、max、average 都是特殊的 reduce。
+     * 例如 Stream 的 sum 就相当于Integer sum = integers.reduce(0, (a, b) -> a+b);也有没有起始值的情况，
+     * 这时会把 Stream 的前面两个元素组合起来，返回的是 Optional。
      */
     @Test
     public void testReduce() {
@@ -196,4 +199,32 @@ public class StreamTest {
         long millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
         System.out.println(String.format("并行排序所用的时间: %d ms", millis));//并行排序所用的时间: 363 ms
     }
+
+    @Test
+    public void random() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("a", 10);
+        map.put("b", 40);
+        map.put("c", 30);
+        map.put("d", 20);
+        HashMap<String, Integer> rows = new HashMap<>();
+        int num = 0;
+        for (String key : map.keySet()) {
+            num += map.get(key);
+            rows.put(key, num);
+        }
+        for (int i = 0; i < 10; i++) {
+            System.out.println(rows);
+            int r = new Random().nextInt(num);
+            System.out.println("r = " + r);
+            for (Map.Entry<String, Integer> entry : rows.entrySet()) {
+                if (entry.getValue() > r) {
+                    System.out.println(entry.getKey());
+                    break;
+                }
+            }
+        }
+    }
+
+
 }
