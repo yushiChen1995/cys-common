@@ -1,7 +1,5 @@
 package com.cys.jdk8;
 
-import io.swagger.models.auth.In;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
@@ -12,7 +10,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.cys.cys.IntentionLevel.roleMap;
 
@@ -156,7 +153,7 @@ public class DateTest {
      * @param <V>
      * @return
      */
-    private static <K, V extends Comparable<? super V>> Map<K, V> sort(Map<K, V> map) {
+    private <K, V extends Comparable<? super V>> Map<K, V> sort(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
         list.sort((o1, o2) -> {
             int compare = (o1.getValue()).compareTo(o2.getValue());
@@ -177,7 +174,7 @@ public class DateTest {
      * @param map
      * @return
      */
-    private static String getMaxRole(List<String> roles, Map<String, Byte> map) {
+    private String getMaxRole(List<String> roles, Map<String, Byte> map) {
         Map<String, Byte> sortMap = sort(map);
         System.out.println("sort = " + sortMap);
         Set<String> keySet = sortMap.keySet();
